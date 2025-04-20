@@ -42,6 +42,7 @@
             text-align: center;
             font-size: 24px;
             margin: 20px 0;
+            color: #333;
         }
         .submit-btn {
             display: block;
@@ -53,9 +54,14 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 20px;
         }
         .submit-btn:hover {
             background-color: #45a049;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
         }
     </style>
 </head>
@@ -94,9 +100,17 @@
             }
         ];
 
+        // Load questions when the page loads
+        window.onload = function() {
+            loadQuestions();
+            updateTimer();
+        };
+
         // Load questions
         function loadQuestions() {
             const questionsDiv = document.getElementById('questions');
+            questionsDiv.innerHTML = ''; // Clear any existing content
+            
             questions.forEach(q => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question';
@@ -153,10 +167,6 @@
 
             alert(`Exam submitted!\nYour score: ${score} out of ${questions.length}`);
         }
-
-        // Start the exam
-        loadQuestions();
-        updateTimer();
     </script>
 </body>
 </html> 
