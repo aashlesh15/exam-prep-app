@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Preparation App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .option {
+            margin: 5px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #e9e9e9;
+        }
+        .timer {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exam Preparation</h1>
+        <div class="timer">Time: <span id="time">30:00</span></div>
+        
+        <div id="questions">
+            <!-- Questions will be loaded here -->
+        </div>
+
+        <button class="submit-btn" onclick="submitExam()">Submit Exam</button>
+    </div>
+
+    <script>
+        // Sample questions
+        const questions = [
+            {
+                id: 1,
+                text: "What is the capital of France?",
+                options: ["London", "Paris", "Berlin", "Madrid"],
+                correct: "Paris"
+            },
+            {
+                id: 2,
+                text: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                correct: "Mars"
+            },
+            {
+                id: 3,
+                text: "What is 2 + 2?",
+                options: ["3", "4", "5", "6"],
+                correct: "4"
+            }
+        ];
+
+        // Load questions
+        function loadQuestions() {
+            const questionsDiv = document.getElementById('questions');
+            questions.forEach(q => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <h3>Question ${q.id}</h3>
+                    <p>${q.text}</p>
+                    <div class="options">
+                        ${q.options.map(opt => `
+                            <div class="option" onclick="selectOption(${q.id}, '${opt}')">
+                                ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                questionsDiv.appendChild(questionDiv);
+            });
+        }
+
+        // Timer functionality
+        let timeLeft = 30 * 60; // 30 minutes
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                submitExam();
+            }
+        }
+
+        // Track selected answers
+        const answers = {};
+        function selectOption(questionId, option) {
+            answers[questionId] = option;
+            // Update UI to show selected option
+            const options = document.querySelectorAll(`.question:nth-child(${questionId}) .option`);
+            options.forEach(opt => {
+                opt.style.backgroundColor = opt.textContent.trim() === option ? '#d4edda' : '#f9f9f9';
+            });
+        }
+
+        // Submit exam
+        function submitExam() {
+            let score = 0;
+            questions.forEach(q => {
+                if (answers[q.id] === q.correct) {
+                    score++;
+                }
+            });
+
+            alert(`Exam submitted!\nYour score: ${score} out of ${questions.length}`);
+        }
+
+        // Start the exam
+        loadQuestions();
+        updateTimer();
+    </script>
+</body>
+</html> 
